@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 
+using System.Net;
+using System.Net.Mail;
+
 using BevobnbTeam30.DAL;
 using BevobnbTeam30.Models;
 using BevobnbTeam30.Utilities;
@@ -99,8 +102,44 @@ namespace BevobnbTeam30.Controllers
                 //the business rules!
                 Microsoft.AspNetCore.Identity.SignInResult result2 = await _signInManager.PasswordSignInAsync(rvm.Email, rvm.Password, false, lockoutOnFailure: false);
 
-                //Send the user to the home page
-                return RedirectToAction("Index", "Home");
+                if (RoleType == "Customer")
+                {
+                    try
+                    {
+                        var senderEmail = new MailAddress("bevobnb30@gmail.com", "BevoBNB Team 30");
+                        var receiverEmail = new MailAddress(rvm.Email, rvm.FirstName);
+                        var password = "mis33k1006";
+                        var sub = "Team 30: Welcome To BevoBNB";
+                        var body = "We're so excited to provide the best hospitatlity experience! Thank you for creating an account. Don't hesitate to book a reservation soon.";
+                        var smtp = new SmtpClient
+                        {
+                            Host = "smtp.gmail.com",
+                            Port = 587,
+                            EnableSsl = true,
+                            DeliveryMethod = SmtpDeliveryMethod.Network,
+                            UseDefaultCredentials = false,
+                            Credentials = new NetworkCredential(senderEmail.Address, password)
+                        };
+                        using (var mess = new MailMessage(senderEmail, receiverEmail)
+                        {
+                            Subject = sub,
+                            Body = body
+                        })
+                        {
+                            smtp.Send(mess);
+                        }
+                        return RedirectToAction("Index", "Home");
+
+                    }
+                    catch (Exception)
+                    {
+                        ModelState.AddModelError("", "Error");
+                        return View();
+                    }
+                }
+        
+            //Send the user to the home page
+            return RedirectToAction("Index", "Home");
             }
             else  //the add user operation didn't work, and we need to show an error message
             {
