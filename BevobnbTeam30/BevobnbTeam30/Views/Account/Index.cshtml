@@ -1,19 +1,31 @@
 @model IndexViewModel
 @{
-    ViewBag.Title = "Change Password";
+    ViewBag.Title = "Manage profile";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 
 <div>
-    <h4>Change your account settings</h4>
+    <h5>@Html.ActionLink("Edit your profile", "EditProfile") </h5>
     <hr />
     <dl class="dl-horizontal">
-        <dt>User Name:</dt>
-        <dd>@Model.UserName</dd>
+        <dt>First Name:</dt>
+        <dd>@Model.FirstName</dd>
+
+        <dt>Last Name:</dt>
+        <dd>@Model.LastName</dd>
 
         <dt>Email:</dt>
         <dd>@Model.Email</dd>
+
+        <dt>Address:</dt>
+        <dd>@Model.Address</dd>
+
+        <dt>Phone number:</dt>
+        <dd>@Model.PhoneNumber</dd>
+
+        <dt>Birthday:</dt>
+        <dd>@Model.Birthday.ToString("MM/dd/yyyy")</dd>
 
         <dt>Password:</dt>
         <dd>

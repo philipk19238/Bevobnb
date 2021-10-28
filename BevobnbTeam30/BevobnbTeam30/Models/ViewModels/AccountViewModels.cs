@@ -40,7 +40,7 @@ namespace BevobnbTeam30.Models
         //NOTE: Here is the property for phone number
         [Required(ErrorMessage = "Phone number is required")]
         [Phone]
-        [Display(Name = "Phone Number")]
+        [Display(Name = "Phone Number:")]
         public string PhoneNumber { get; set; }
 
 
@@ -53,12 +53,12 @@ namespace BevobnbTeam30.Models
         public String LastName { get; set; }
 
         [Required(ErrorMessage = "Birthday is required.")]
-        [Display(Name = "Birthday")]
+        [Display(Name = "Birthday:")]
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
 
         [Required(ErrorMessage = "Address is required.")]
-        [Display(Name = "Address")]
+        [Display(Name = "Address:")]
         public String Address { get; set; }
 
         [Required(ErrorMessage = "User type is required.")]
@@ -104,8 +104,44 @@ namespace BevobnbTeam30.Models
     public class IndexViewModel
     {
         public bool HasPassword { get; set; }
-        public String UserName { get; set; }
+        public String FirstName { get; set; }
+        public String LastName { get; set; }
         public String Email { get; set; }
+        public String PhoneNumber { get; set; }
+
+        public DateTime Birthday { get; set; }
+        public String Address { get; set; }
+
         public String UserID { get; set; }
+    }
+
+
+    public class EditProfileViewModel
+    {
+        public Int32 EditProfileViewModelID { get; set; }
+
+        [Display(Name = "First Name")]
+        public String FirstName { get; set; }
+
+        [Display(Name = "Last Name")]
+        public String LastName { get; set; } 
+        public String Email { get; set; }
+
+        //NOTE: Here is the property for phone number
+        [Required(ErrorMessage = "Phone number is required")]
+        [Phone]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "Phone number must have 10 digits.")]
+        [Display(Name = "Phone Number")]
+        public String PhoneNumber { get; set; }
+
+        [Required(ErrorMessage = "Birthday is required.")]
+        [Display(Name = "Birthday")]
+        [DataType(DataType.Date)]
+        public DateTime Birthday { get; set; }
+
+        [Required(ErrorMessage = "Address is required.")]
+        [Display(Name = "Address")]
+        public String Address { get; set; }
+    
     }
 }

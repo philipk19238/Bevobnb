@@ -44,7 +44,8 @@ namespace BevobnbTeam30.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel rvm)
         {
-           
+
+            TryValidateModel(rvm);
             //if registration data is valid, create a new user on the database
             if (ModelState.IsValid == false)
             {
@@ -172,12 +173,86 @@ namespace BevobnbTeam30.Controllers
             ivm.Email = user.Email;
             ivm.HasPassword = true;
             ivm.UserID = user.Id;
-            ivm.UserName = user.UserName;
+            ivm.FirstName = user.FirstName;
+            ivm.LastName = user.LastName;
+            ivm.PhoneNumber = user.PhoneNumber;
+            ivm.Address = user.Address;
+            ivm.Birthday = user.Birthday;
 
             //send data to the view
             return View(ivm);
         }
 
+
+        //GET: Account/EditProfile
+
+        public IActionResult EditProfile() {
+
+            EditProfileViewModel ivm = new EditProfileViewModel();
+
+            //get user info
+            String id = User.Identity.Name;
+            AppUser user = _context.Users.FirstOrDefault(u => u.UserName == id);
+
+            //populate the view model
+            //(i.e. map the domain model to the view model)
+            ivm.Email = user.Email;
+            ivm.FirstName = user.FirstName;
+            ivm.LastName = user.LastName;
+            ivm.PhoneNumber = user.PhoneNumber;
+            ivm.Address = user.Address;
+            ivm.Birthday = user.Birthday;
+
+            return View(ivm);
+
+        }
+
+        // POST: /Account/EditProfile
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditProfile(EditProfileViewModel epvm)
+        {
+
+            AppUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+            //if registration data is valid, edit user's info
+            TryValidateModel(epvm);
+
+            if (ModelState.IsValid == false)
+            {
+                //this is the sad path - something went wrong, 
+                //return the user to the register page to try again
+               epvm.Email = user.Email;
+               epvm.FirstName = user.FirstName;
+               epvm.LastName = user.LastName;
+                return View(epvm);
+            }
+
+                user.Address = epvm.Address;
+                user.PhoneNumber = epvm.PhoneNumber;
+                user.Birthday = epvm.Birthday;
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded) //everything is okay
+                {
+                   //Send the user to the home page
+                    return RedirectToAction("Index");
+                }
+                else  //the edit user operation didn't work, and we need to show an error message
+                {
+                    foreach (IdentityError error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+
+                    //send user back to page with errors
+                     epvm.Email = user.Email;
+                    epvm.FirstName = user.FirstName;
+                     epvm.LastName = user.LastName;
+                    return View(epvm);
+                }
+            }
+ 
 
 
         //Logic for change password

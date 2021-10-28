@@ -23,6 +23,8 @@ namespace BevobnbTeam30.DAL
             base.OnModelCreating(builder);
         }
 
+        public DbSet<BevobnbTeam30.Models.EditProfileViewModel> EditProfileViewModel { get; set; }
+
         //TODO: Add Dbsets here.  Products is included as an example.  
         //public DbSet<Product> Products { get; set; }
     }
